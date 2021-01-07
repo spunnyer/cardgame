@@ -3,7 +3,8 @@ import React from "react"
 class Game extends React.Component {
 
 	state = {
-		pairs: 4,
+		deckSize: this.props.deckSize,
+		pairs: 5,
 		steps: 0,
 		highScore: 0,
 		inPair: 2,
@@ -22,16 +23,18 @@ class Game extends React.Component {
 			presseds: [],
 			disabled: []
 		})
+
 		this.createGrid()
 	}
 
 	createGrid = () => {
+		
 		var list = [
-			"angular", "d3", "jenkins", "postcss", "react", "sass", "splendex", "ts", "webpack"
+			"angular", "d3", "jenkins", "postcss", "react", "redux", "sass", "splendex", "ts", "webpack"
 		]
 
 		// get randomized cards
-		const selecteds = this.shuffle(list).slice(0, this.state.pairs)
+		const selecteds = this.shuffle(list).slice(0, this.state.deckSize / 2)
 
 		// create playarea
 		var grid = []
@@ -48,14 +51,14 @@ class Game extends React.Component {
 	}
 
 	componentDidMount = () => {
-
-		const savedState = localStorage.getItem("state")
 	
-		if (savedState == null) {
+		if (this.props.state == null) {
 			this.createGrid()
 		} else {
-			this.setState(JSON.parse(savedState))
+			this.setState(this.props.state)
 		}
+
+		console.log(this.props.deckSize)
 
 	}
 
@@ -78,9 +81,6 @@ class Game extends React.Component {
 
 		var presseds = this.state.presseds
 
-		console.log(presseds)
-		console.log(presseds.length)
-
 		if (presseds.length < 2) {
 			await this.setState({
 				presseds: presseds.concat([parseInt(event.target.dataset.index)]),
@@ -90,9 +90,6 @@ class Game extends React.Component {
 
 		if (this.state.presseds.length == 2) {
 
-			console.log(this.state.grid[this.state.presseds[0]])
-			console.log(this.state.grid[this.state.presseds[1]])
-
 			setTimeout(async () => {
 				if (this.state.grid[this.state.presseds[0]] == this.state.grid[this.state.presseds[1]]) {
 					await this.setState({
@@ -100,22 +97,17 @@ class Game extends React.Component {
 						presseds: []
 					})
 
-					console.table([
-						this.state.disabled.length, this.state.pairs * 2
-					])
-
-					if (this.state.disabled.length == this.state.pairs * 2) {
-						console.info("Játék befejezve!")
+					if (this.state.disabled.length == this.state.deckSize / 2) {
+						console.info("The game has ended!")
 						this.finish()
 					}
-
 				} else {
 					console.log("Nem")
 					this.setState({
 						presseds: []
 					})
 				}
-			}, 2000)		
+			}, 1200)		
 		}
 		
 		this.saveState()
@@ -126,25 +118,24 @@ class Game extends React.Component {
 		var cards = []
 
 		this.state.grid.map((type, index) => {
+
 			if (this.state.disabled.includes(index)) {
 				cards.push(
-					<div key={index} className="bg-black">
+					<div key={index} className="bg-transparent p-4">
 						<img src={`/cards/${type}.png`}></img> 
 					</div>
 				)
 			} else {
 				cards.push(
 					<div key={index} data-index={index} onClick={this.onClick} className="p-4 rounded-lg flex shadow bg-white cursor-pointer hover:bg-gray-300 transition-colors duration-150">
-						<div>
-							{this.state.presseds.includes(index) ? <img src={`/cards/${type}.png`}></img> : ""}
-						</div>
+						<img className={`pointer-events-none ${this.state.presseds.includes(index) ? "opacity-100" : "opacity-0"}`}  src={`/cards/${type}.png`}/>
 					</div>
 				)
-				}
+			}
 		})
 
 		return (
-			<div className="container mx-auto flex-grow flex flex-col">
+			<div className="md:max-w-screen-md container mx-auto flex-grow flex flex-col">
 				<div className="flex relative py-2">
 					<div className="float-right">
 						<span className="text-gray-500">Current tiles:</span> {this.state.steps}
@@ -157,7 +148,7 @@ class Game extends React.Component {
 						<div onClick={this.onRestart} role="button" className="bg-transparent border-2 uppercase py-2 px-4">Restart</div>
 					</div>
 				</div>
-				<div className="grid grid-cols-3 grid-rows-3 gap-4 grid-flow-col grid-flow-row min-h-screen">
+				<div className="grid grid-cols-3 md:grid-cols-5 lg:grid-cols-6 gap-4 pb-8">
 					{cards}
 				</div>
 			</div>

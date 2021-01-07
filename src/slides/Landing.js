@@ -1,7 +1,7 @@
 import React from "react"
 import Button from "../components/Button"
 
-const min = 3, max = 10
+const min = 6, max = 20
 
 class Landing extends React.Component {
 
@@ -14,9 +14,8 @@ class Landing extends React.Component {
 	}
 
 	onChange = (event) => {
-		// handle deck size update
-		this.setState({
-			deckSize: event.target.value()
+		this.props.onDeckSizeChange({
+			deckSize: event.target.value
 		})
 	}
 
@@ -43,7 +42,7 @@ class Landing extends React.Component {
 						</select>
 					</div>
 					<div className="uppercase px-4 py-2 bg-blue-600 font-bold text-white" onClick={() => {
-						this.startGame()
+						this.props.onStartGame()
 					}}>
 						Start New Game
 					</div>
