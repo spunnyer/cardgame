@@ -24,6 +24,7 @@ class Game extends React.Component {
 			disabled: []
 		})
 
+		this.clearState()
 		this.createGrid()
 	}
 
@@ -55,10 +56,16 @@ class Game extends React.Component {
 		if (this.props.state == null) {
 			this.createGrid()
 		} else {
-			this.setState(this.props.state)
+			this.setState(JSON.parse(this.props.state))
 		}
 
-		console.log(this.props.deckSize)
+
+		// get high score from cache
+		const cacheHighScore = localStorage.getItem("highScore")
+		
+		this.setState({
+			highScore: (cacheHighScore == null ? 0 : cacheHighScore)
+		})
 
 	}
 
@@ -66,18 +73,28 @@ class Game extends React.Component {
 		localStorage.setItem("state", JSON.stringify(this.state))
 	}
 
+	clearState = () => {
+		localStorage.removeItem("state")
+	}
+
 	finish = () => {
 
-		const prevBest = localStorage.getItem("bestScore")
-
-		if (prevBest == null || prevBest < this.state.steps) {
-			localStorage.setItem("bestScore", this.state.steps)
+		if (this.state.highScore < this.state.steps) {
+			localStorage.setItem("highScore", this.state.steps)
+			this.setState({
+				highScore: this.state.steps
+			})
 			console.info(`New high score!`)
 		}
+
+		// senitize
+		this.clearState()
 
 	}
 
 	onClick = async (event) => {
+
+		console.log(`Megnyomás`)
 
 		var presseds = this.state.presseds
 
@@ -88,6 +105,8 @@ class Game extends React.Component {
 			})
 		}
 
+		console.log(this.state.disabled.length, this.state.deckSize)
+
 		if (this.state.presseds.length == 2) {
 
 			setTimeout(async () => {
@@ -97,7 +116,7 @@ class Game extends React.Component {
 						presseds: []
 					})
 
-					if (this.state.disabled.length == this.state.deckSize / 2) {
+					if (this.state.disabled.length == this.state.deckSize) {
 						console.info("The game has ended!")
 						this.finish()
 					}

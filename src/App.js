@@ -1,6 +1,7 @@
 import React from "react"
 import Game from "./slides/Game"
 import Landing from "./slides/Landing"
+import Header from "./components/Header"
 
 class App extends React.Component {
 
@@ -11,6 +12,7 @@ class App extends React.Component {
 	}
 
 	componentDidMount = () => {
+		// check if state has data already
 		const state = localStorage.getItem("state")
 
 		if (state !== null) {
@@ -30,12 +32,12 @@ class App extends React.Component {
 		this.setState({
 			deckSize
 		})
-		console.log(this.state)
 	}
 
 	render() {
 		return (
 			<div>
+				<Header isInGame={this.state.inGame} onDeckSizeChange={this.onDeckSizeChange} onStartGame={this.onStartGame}/>
 				{this.state.inGame ? <Game deckSize={this.state.deckSize} state={this.state.data}/> : <Landing onDeckSizeChange={this.onDeckSizeChange} onStartGame={this.onStartGame}/>}
 			</div>
 		)
