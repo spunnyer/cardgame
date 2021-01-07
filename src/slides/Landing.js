@@ -11,7 +11,9 @@ class Landing extends React.Component {
 					<div className="text-3xl font-medium mb-24 mt-24">Splendex Memory Game</div>
 					<div className="text-sm mb-2">Deck Size</div>
 					<SelectDeckSize onDeckSizeChange={this.props.onDeckSizeChange}/>
-					<StartGameButton onStartGame={this.props.onStartGame}/>
+					<div className="mt-8">
+						<StartGameButton onStartGame={this.props.onStartGame}/>
+					</div>
 				</div>
 			</div>
 		)

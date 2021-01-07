@@ -118,6 +118,7 @@ class Game extends React.Component {
 
 					if (this.state.disabled.length == this.state.deckSize) {
 						console.info("The game has ended!")
+						alert(`The game has ended!\nYour score was: ${this.state.steps}`)
 						this.finish()
 					}
 				} else {
@@ -156,15 +157,15 @@ class Game extends React.Component {
 		return (
 			<div className="md:max-w-screen-md container mx-auto flex-grow flex flex-col">
 				<div className="flex relative py-2">
-					<div className="float-right">
-						<span className="text-gray-500">Current tiles:</span> {this.state.steps}
+					<div className="float-right py-4">
+						<span className="text-gray-500">Current tiles:</span> <span className="font-bold">{this.state.steps}</span>
 					</div>
 					<div className="flex-grow text-center">
 						<div className="text-gray-500">Best:</div>
-						<div>{this.state.highScore}</div>
+						<div className="text-3xl font-medium">{this.state.highScore}</div>
 					</div>
 					<div className="float-left">
-						<div onClick={this.onRestart} role="button" className="bg-transparent border-2 uppercase py-2 px-4">Restart</div>
+						<div onClick={this.onRestart} role="button" className="bg-transparent border-2 border-gray-800 rounded font-bold uppercase py-2 px-4">Restart</div>
 					</div>
 				</div>
 				<div className="grid grid-cols-3 md:grid-cols-5 lg:grid-cols-6 gap-4 pb-8">

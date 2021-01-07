@@ -21,7 +21,7 @@ class SelectDeckSize extends React.Component {
 		}
 
 		return (
-			<select className="text-xl px-4 py-2 shadow" onChange={this.onChange}>
+			<select className="inline-block text-xl px-4 py-2 shadow" onChange={this.onChange}>
 				{options}
 			</select>
 		)
