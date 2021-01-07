@@ -94,8 +94,6 @@ class Game extends React.Component {
 
 	onClick = async (event) => {
 
-		console.log(`Megnyomás`)
-
 		var presseds = this.state.presseds
 
 		if (presseds.length < 2) {
@@ -105,32 +103,30 @@ class Game extends React.Component {
 			})
 		}
 
-		console.log(this.state.disabled.length, this.state.deckSize)
-
-		if (this.state.presseds.length == 2) {
+		if (this.state.presseds.length === 2) {
 
 			setTimeout(async () => {
-				if (this.state.grid[this.state.presseds[0]] == this.state.grid[this.state.presseds[1]]) {
+				if (this.state.grid[this.state.presseds[0]] === this.state.grid[this.state.presseds[1]]) {
 					await this.setState({
 						disabled: this.state.disabled.concat(this.state.presseds),
 						presseds: []
 					})
 
-					if (this.state.disabled.length == this.state.deckSize) {
+					if (this.state.disabled.length === this.state.deckSize) {
 						console.info("The game has ended!")
 						alert(`The game has ended!\nYour score was: ${this.state.steps}`)
 						this.finish()
 					}
 				} else {
-					console.log("Nem")
+					console.log("Not matching")
 					this.setState({
 						presseds: []
 					})
 				}
+				this.saveState()
 			}, 1200)		
 		}
 		
-		this.saveState()
 	}
 
 	render() {
@@ -158,7 +154,7 @@ class Game extends React.Component {
 			<div className="md:max-w-screen-md container mx-auto flex-grow flex flex-col">
 				<div className="flex relative py-2">
 					<div className="float-right py-4">
-						<span className="text-gray-500">Current tiles:</span> <span className="font-bold">{this.state.steps}</span>
+						<span className="text-gray-500">Current tries:</span> <span className="font-bold">{this.state.steps}</span>
 					</div>
 					<div className="flex-grow text-center">
 						<div className="text-gray-500">Best:</div>

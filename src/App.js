@@ -22,8 +22,9 @@ class App extends React.Component {
 		}
 	}
 
-	onStartGame = () => {
-		this.setState({
+	onStartGame = async () => {
+		// panic! in header new game grid doesn't resets (NEEDS FIX)
+		await this.setState({
 			inGame: true
 		})
 	}
